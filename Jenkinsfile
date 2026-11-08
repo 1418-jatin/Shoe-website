@@ -1,108 +1,75 @@
 pipeline {
-    // Runs on the Jenkins agent node that has the label "linux-agent"
+    // Runs on the EC2 instance registered in Jenkins as a node with label "linux-agent"
     agent { label 'linux-agent' }
 
-    options {
-        disableConcurrentBuilds()
-        timeout(time: 20, unit: 'MINUTES')
+    environment {
+        // Username/password credential (ID: dockerhub-cred)
+        // Exposes DOCKERHUB_CRED_USR and DOCKERHUB_CRED_PSW
+        DOCKERHUB_CRED = credentials('dockerhub-cred')
+
+        APP_NAME      = 'jakey-shoes'
+        IMAGE_REPO    = '19901418/prt-oct-25th'
+        IMAGE_TAG     = "${BUILD_NUMBER}"
+
+        // Private IP of the kube-server EC2 instance (same VPC as the agent)
+        K8S_NODE_IP   = '172.31.42.35'
+        K8S_NODE_USER = 'ubuntu'
     }
 
-    environment {
-        DOCKERHUB_USER = '19901418'
-        DOCKERHUB_REPO = 'prt-oct-25th'            // your Docker Hub repository name
-        KUBE_SERVER_IP = '172.31.42.35'            // kube-server private IP
-        KUBE_SSH_USER  = 'ubuntu'
-
-        IMAGE_NAME = "${DOCKERHUB_USER}/${DOCKERHUB_REPO}"
-        IMAGE_TAG  = "${BUILD_NUMBER}"
-        APP_DIR    = '/home/ubuntu/jakey-shoes'    // folder on kube-server
+    options {
+        timestamps()
+        disableConcurrentBuilds()
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Check Tools') {
-            steps {
-                sh '''
-                    docker --version
-                    ssh -V
-                '''
-            }
-        }
-
-        stage('Prepare Manifests') {
-            steps {
-                // Finds deployment/service files anywhere in the repo, with .yml or .yaml,
-                // and gathers them into one "manifests" folder.
-                sh '''
-                    rm -rf manifests && mkdir manifests
-
-                    find . -path ./manifests -prune -o -type f \
-                         \\( -name "deployment.yml" -o -name "deployment.yml" \
-                            -o -name "service.yml"  -o -name "service.yml" \\) \
-                         -print -exec cp {} manifests/ \\;
-
-                    echo "---- Files in workspace ----"
-                    ls -la
-                    echo "---- Manifests found ----"
-                    ls -la manifests
-
-                    # Fail early with a clear message if either file is missing
-                    ls manifests/deployment.yml manifests/service.yml
-
-                    # Put the new image into the deployment file
-                    grep -q IMAGE_PLACEHOLDER manifests/deployment.yml || echo "WARNING: IMAGE_PLACEHOLDER not found in deployment file"
-                    sed -i "s|IMAGE_PLACEHOLDER|${IMAGE_NAME}:${IMAGE_TAG}|g" manifests/deployment.yml
-                '''
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh '''
-                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -t ${IMAGE_NAME}:latest .
+                    docker build -t ${IMAGE_REPO}:${IMAGE_TAG} -t ${IMAGE_REPO}:latest .
                 '''
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                // dockerhub-cred = Username with password (global)
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred',
-                                                  usernameVariable: 'DH_USER',
-                                                  passwordVariable: 'DH_PASS')]) {
-                    sh '''
-                        echo "$DH_PASS" | docker login -u "$DH_USER" --password-stdin
-                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                        docker push ${IMAGE_NAME}:latest
-                        docker logout
-                    '''
-                }
+                sh '''
+                    echo "${DOCKERHUB_CRED_PSW}" | docker login -u "${DOCKERHUB_CRED_USR}" --password-stdin
+                    docker push ${IMAGE_REPO}:${IMAGE_TAG}
+                    docker push ${IMAGE_REPO}:latest
+                '''
             }
         }
 
-        stage('Deploy to Minikube') {
+        stage('Deploy to Kubernetes') {
             steps {
-                // ubuntu-cred = SSH Username with private key (global)
-                sshagent(credentials: ['ubuntu-cred']) {
+                // ubuntu-cred = "SSH Username with private key" credential (same key used for the agent EC2 instances)
+                // No SSH Agent plugin needed: the key is written to a temp file by withCredentials
+                withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu-cred', keyFileVariable: 'SSH_KEY')]) {
                     sh '''
-                        SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+                        # Inject the freshly built image tag into the deployment manifest
+                        sed -i "s|IMAGE_PLACEHOLDER|${IMAGE_REPO}:${IMAGE_TAG}|g" k8s/deployment.yml
 
-                        # Fresh folder on kube-server, then copy the manifests
-                        ssh $SSH_OPTS ${KUBE_SSH_USER}@${KUBE_SERVER_IP} "rm -rf ${APP_DIR} && mkdir -p ${APP_DIR}"
-                        scp $SSH_OPTS manifests/* ${KUBE_SSH_USER}@${KUBE_SERVER_IP}:${APP_DIR}/
+                        SSH_OPTS="-i $SSH_KEY -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+                        REMOTE="${K8S_NODE_USER}@${K8S_NODE_IP}"
+                        REMOTE_DIR="~/${APP_NAME}-k8s"
 
-                        # Apply and wait for rollout
-                        ssh $SSH_OPTS ${KUBE_SSH_USER}@${KUBE_SERVER_IP} "
-                            ls -la ${APP_DIR} &&
-                            kubectl apply -f ${APP_DIR}/ &&
-                            kubectl rollout status deployment/jakey-shoes --timeout=120s &&
-                            kubectl get pods,svc -l app=jakey-shoes
+                        # Copy both manifests to the Kubernetes node
+                        ssh $SSH_OPTS $REMOTE "mkdir -p ${REMOTE_DIR}"
+                        scp $SSH_OPTS k8s/deployment.yml k8s/service.yml $REMOTE:${REMOTE_DIR}/
+
+                        # Apply deployment + service, then wait for the rollout
+                        ssh $SSH_OPTS $REMOTE "
+                            export PATH=\\$PATH:/snap/bin:/usr/local/bin &&
+                            kubectl apply -f ${REMOTE_DIR}/deployment.yml &&
+                            kubectl apply -f ${REMOTE_DIR}/service.yml &&
+                            kubectl rollout status deployment/${APP_NAME} --timeout=120s &&
+                            kubectl get pods,svc -l app=${APP_NAME}
                         "
                     '''
                 }
@@ -112,12 +79,14 @@ pipeline {
 
     post {
         always {
-            sh '''
-                docker rmi ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest || true
-                docker image prune -f || true
-            '''
+            sh 'docker logout || true'
+            sh 'docker image prune -f || true'
         }
-        success { echo "Deployed ${IMAGE_NAME}:${IMAGE_TAG} to minikube." }
-        failure { echo "Pipeline failed. Check the stage logs above." }
+        success {
+            echo "Deployed ${IMAGE_REPO}:${IMAGE_TAG} to the Kubernetes node."
+        }
+        failure {
+            echo 'Pipeline failed. Check the stage logs above.'
+        }
     }
 }
