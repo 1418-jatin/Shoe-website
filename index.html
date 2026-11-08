@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jakey Shoes – India's Biggest Brand for Nike, Adidas & Puma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=DM+Sans:wght@400;500;700&family=Mr+Dafoe&display=swap" rel="stylesheet">
+<style>
+:root{--indigo:#0b0b12;--saffron:#1f6bff;--navy:#0a1f5c;--paper:#f4f6fb;--ink:#0b0b12;--coral:#0b0b12;--mute:#6b6a85;--line:#e1e2ee}
+*{box-sizing:border-box;margin:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5}
+h1,h2,h3,.logo{font-family:'Bricolage Grotesque',system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.promo{background:var(--saffron);color:#fff;text-align:center;font-weight:700;font-size:14px;padding:8px 12px}
+header{background:var(--indigo);color:#fff;position:sticky;top:0;z-index:20}
+.bar{display:flex;align-items:center;gap:24px;height:68px}
+.logo{font-weight:800;font-size:26px;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo b{background:var(--saffron);color:#fff;padding:2px 9px;border-radius:8px;transform:rotate(-4deg);display:inline-block}
+nav{display:flex;gap:22px;margin-left:auto;font-weight:500}
+nav a{opacity:.85}nav a:hover{opacity:1;color:var(--saffron)}
+.cart{background:var(--saffron);color:#fff;border:0;border-radius:999px;padding:9px 18px;font:700 15px 'DM Sans';cursor:pointer}
+.hero{background:linear-gradient(135deg,#05050a 0%,#0b0b12 45%,#0a1f5c 100%);color:#fff;overflow:hidden;position:relative}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:20px;padding-top:56px;padding-bottom:64px}
+.hero h1{font-size:clamp(40px,6.4vw,78px);line-height:.98;letter-spacing:-2px;font-weight:800}
+.hero p{margin:20px 0 28px;max-width:470px;color:#c4d3f5;font-size:18px}
+.btn{display:inline-block;background:var(--saffron);color:#fff;font-weight:700;padding:14px 28px;border-radius:999px;border:0;cursor:pointer;font-size:16px;font-family:inherit}
+.btn.ghost{background:transparent;color:#fff;border:2px solid #fff;margin-left:10px}
+.sig{font-family:'Mr Dafoe',cursive;color:#5b95ff;font-size:42px;margin-top:26px;transform:rotate(-5deg);display:inline-block;line-height:1}
+.sig small{display:block;font-family:'DM Sans';font-size:12px;color:#9fb4e6;transform:none;margin-top:2px}
+.sig svg{display:block;width:150px}
+.stage{position:relative}
+.stage .disc{position:absolute;inset:6% 8%;border-radius:50%;background:var(--saffron)}
+.stage svg{position:relative;width:100%;transform:rotate(-14deg);filter:drop-shadow(0 26px 22px rgba(0,0,0,.35));animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{transform:translateY(40px) rotate(-26deg);opacity:0}}
+.stage .tag{position:absolute;right:2%;bottom:6%;background:var(--coral);color:#fff;font-weight:800;padding:12px 18px;border-radius:14px;transform:rotate(6deg);font-family:'Bricolage Grotesque'}
+.trust{background:#fff;border-bottom:1px solid var(--line)}
+.trust .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-top:16px;padding-bottom:16px;font-size:14px;font-weight:500}
+section{padding:60px 0}
+.head{display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:16px;margin-bottom:28px}
+.head h2{font-size:clamp(28px,4vw,42px);letter-spacing:-1px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{border:2px solid var(--indigo);background:transparent;color:var(--indigo);font:700 15px 'DM Sans';padding:8px 20px;border-radius:999px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--indigo);color:#fff}
+.brands{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.brand{border-radius:22px;padding:30px;color:#fff;min-height:170px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;border:0;text-align:left;font-family:inherit}
+.brand h3{font-size:44px;letter-spacing:-1.5px;line-height:1}
+.brand span{font-size:15px;opacity:.9}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.card{background:#fff;border-radius:18px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(27,20,100,.14)}
+.pic{background:var(--bg);padding:22px 14px 8px;position:relative}
+.pic svg{width:100%;transform:rotate(-8deg)}
+.pic .off{position:absolute;top:12px;left:12px;background:var(--coral);color:#fff;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px}
+.info{padding:14px 16px 18px;display:flex;flex-direction:column;gap:3px;flex:1}
+.info .b{font-weight:700;color:var(--mute);font-size:13px}
+.info h3{font-size:18px;line-height:1.2}
+.price{margin-top:auto;padding-top:8px;display:flex;align-items:baseline;gap:8px}
+.price strong{font-size:20px}.price s{color:var(--mute);font-size:14px}
+.add{margin-top:10px;background:var(--indigo);color:#fff;border:0;border-radius:10px;padding:10px;font:700 14px 'DM Sans';cursor:pointer}
+.add:hover{background:#1f6bff}
+.promise{background:linear-gradient(135deg,#0a1f5c 0%,#0b0b12 100%);color:#fff}
+.promise .wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.promise h2{font-size:clamp(30px,4vw,46px);letter-spacing:-1px;line-height:1.05}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stats div{background:rgba(255,255,255,.08);border-radius:16px;padding:20px}
+.stats strong{font:800 34px 'Bricolage Grotesque';color:#5b95ff;display:block}
+footer{background:var(--ink);color:#c9c8e6;padding:44px 0 26px;font-size:14px}
+footer .cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px}
+footer h4{color:#fff;margin-bottom:10px}footer li{list-style:none;margin:5px 0}
+footer ul{padding:0}
+.fine{border-top:1px solid #2d2a55;margin-top:30px;padding-top:16px;font-size:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,90px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-weight:500;transition:transform .3s;z-index:50}
+.toast.on{transform:translate(-50%,0)}
+@media(max-width:900px){.hero .wrap,.promise .wrap{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.brands{grid-template-columns:1fr}.trust .wrap{grid-template-columns:1fr 1fr}nav{display:none}.cart{margin-left:auto}footer .cols{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.grid{gap:10px}.info h3{font-size:15px}.btn.ghost{margin:10px 0 0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="shoe" viewBox="0 0 300 150">
+    <path d="M8 104H292V110Q292 132 268 132H34Q8 132 8 110Z" fill="var(--sl,#fff)"/>
+    <path d="M12 104V72Q12 62 26 60L68 52Q92 47 104 30L118 14Q128 6 140 16L152 40Q172 62 212 68Q264 72 284 94Q292 100 290 104Z" fill="var(--up,#222)"/>
+    <path d="M52 94Q130 106 204 68Q214 90 270 98Q150 104 52 94Z" fill="var(--ac,#fff)"/>
+    <path d="M128 30l16 9M138 22l16 11M150 40l14 7M160 50l12 6" stroke="var(--ac,#fff)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M12 104H292" stroke="rgba(0,0,0,.18)" stroke-width="3"/>
+  </symbol>
+</svg>
+
+<div class="promo">Free delivery across India on orders above ₹2,999 · Easy 30-day returns</div>
+
+<header>
+  <div class="wrap bar">
+    <a href="#" class="logo" aria-label="Jakey Shoes home"><b>J</b>akey Shoes</a>
+    <nav aria-label="Main">
+      <a href="#shop" data-go="Nike">Nike</a>
+      <a href="#shop" data-go="Adidas">Adidas</a>
+      <a href="#shop" data-go="Puma">Puma</a>
+      <a href="#about">Why Jakey</a>
+    </nav>
+    <button class="cart" id="cartBtn">Bag (<span id="count">0</span>)</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>India's biggest shoe store. Three big names.</h1>
+      <p>Nike, Adidas and Puma, all in one place. 100% genuine pairs, fair prices, and delivery to your door in every pin code.</p>
+      <a class="btn" href="#shop">Shop all shoes</a><a class="btn ghost" href="#brands">Pick a brand</a>
+      <div>
+        <div class="sig" aria-label="Signed, Jakey">Jakey
+          <svg viewBox="0 0 150 14" aria-hidden="true"><path d="M2 9Q40 1 80 7T148 4" fill="none" stroke="#5b95ff" stroke-width="3" stroke-linecap="round"/></svg>
+          <small>Founder's signature · since 2009</small>
+        </div>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="disc"></div>
+      <svg viewBox="0 0 300 150" style="--up:#fff;--sl:#0b0b12;--ac:#1f6bff" role="img" aria-label="Featured sneaker"><use href="#shoe"/></svg>
+      <div class="tag">Up to 40% off</div>
+    </div>
+  </div>
+</div>
+
+<div class="trust"><div class="wrap">
+  <span>✔ 100% genuine brands</span><span>🚚 Delivery in 2–5 days</span><span>↩ 30-day returns</span><span>💳 UPI, cards & Cash on Delivery</span>
+</div></div>
+
+<section id="brands"><div class="wrap">
+  <div class="head"><h2>Shop by brand</h2></div>
+  <div class="brands">
+    <button class="brand" style="background:#1f6bff" data-go="Nike"><h3>Nike</h3><span>Air Max, Pegasus, Dunks and more</span></button>
+    <button class="brand" style="background:#0a1f5c" data-go="Adidas"><h3>Adidas</h3><span>Ultraboost, Samba, Superstar</span></button>
+    <button class="brand" style="background:#0b0b12" data-go="Puma"><h3>Puma</h3><span>Suede, RS-X, Speedcat</span></button>
+  </div>
+</div></section>
+
+<section id="shop" style="padding-top:0"><div class="wrap">
+  <div class="head">
+    <h2>Fresh pairs, ready to ship</h2>
+    <div class="tabs" id="tabs" role="group" aria-label="Filter by brand">
+      <button aria-pressed="true" data-b="All">All</button>
+      <button aria-pressed="false" data-b="Nike">Nike</button>
+      <button aria-pressed="false" data-b="Adidas">Adidas</button>
+      <button aria-pressed="false" data-b="Puma">Puma</button>
+    </div>
+  </div>
+  <div class="grid" id="grid"></div>
+</div></section>
+
+<section class="promise" id="about"><div class="wrap">
+  <div>
+    <h2>Why India picks Jakey for its shoes</h2>
+    <p style="margin-top:16px;color:#c4d3f5;max-width:460px">We started with one small shop and a simple rule: sell only genuine shoes, at honest prices, and fix any problem fast. Today we ship from warehouses across the country.</p>
+  </div>
+  <div class="stats">
+    <div><strong>25 lakh+</strong>pairs delivered</div>
+    <div><strong>19,000+</strong>pin codes covered</div>
+    <div><strong>120+</strong>stores in India</div>
+    <div><strong>4.8/5</strong>average customer rating</div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="cols">
+    <div><div class="logo" style="color:#fff;margin-bottom:10px"><b>J</b>akey Shoes</div><p style="max-width:300px">India's biggest brand for Nike, Adidas and Puma shoes. Made in India for every runner, hooper and street walker.</p><div class="sig" style="font-size:34px">Jakey</div></div>
+    <div><h4>Shop</h4><ul><li>Nike</li><li>Adidas</li><li>Puma</li><li>Sale</li></ul></div>
+    <div><h4>Help</h4><ul><li>Track order</li><li>Returns</li><li>Size guide</li><li>Contact us</li></ul></div>
+    <div><h4>Company</h4><ul><li>About Jakey</li><li>Store locator</li><li>Careers</li><li>Privacy</li></ul></div>
+  </div>
+  <p class="fine">© 2026 Jakey Shoes Pvt. Ltd. Nike, Adidas and Puma are trademarks of their respective owners. This is a demo storefront.</p>
+</div></footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const P=[
+["Nike","Air Force 1 '07",8495,10995,"#fff","#e9e9ee","#0a1f5c"],
+["Nike","Air Max 270",12995,15995,"#16162a","#1f6bff","#fff"],
+["Nike","Pegasus 41",10495,13495,"#1f6bff","#0a1f5c","#fff"],
+["Nike","Dunk Low Retro",9995,11995,"#0b0b12","#fff","#fff"],
+["Adidas","Ultraboost Light",14999,18999,"#f2f2f2","#0a1f5c","#1f6bff"],
+["Adidas","Samba OG",8999,10999,"#f5f1e6","#1f6bff","#0b0b12"],
+["Adidas","Superstar",7999,9999,"#fff","#16162a","#fff"],
+["Adidas","Campus 00s",8499,10999,"#6b7280","#fff","#e8e4d8"],
+["Puma","Suede Classic XXI",6499,8999,"#0a1f5c","#fff","#fff"],
+["Puma","RS-X Efekt",9499,12999,"#fff","#1f6bff","#1f6bff"],
+["Puma","Speedcat OG",7999,10499,"#16162a","#1f6bff","#fff"],
+["Puma","Palermo",6999,8999,"#1f6bff","#fff","#d9c9a6"]
+];
+const BG={Nike:"#e3ecff",Adidas:"#d9e5fb",Puma:"#e9e9ef"};
+const fmt=n=>"₹"+n.toLocaleString("en-IN");
+const grid=document.getElementById("grid");
+let cart=0,filter="All";
+function render(){
+  grid.innerHTML=P.filter(p=>filter==="All"||p[0]===filter).map((p,i)=>{
+    const off=Math.round((1-p[2]/p[3])*100);
+    return `<article class="card"><div class="pic" style="--bg:${BG[p[0]]}">
+      <span class="off">${off}% off</span>
+      <svg viewBox="0 0 300 150" style="--up:${p[4]};--ac:${p[5]};--sl:${p[6]}" role="img" aria-label="${p[0]} ${p[1]}"><use href="#shoe"/></svg></div>
+      <div class="info"><span class="b">${p[0]}</span><h3>${p[1]}</h3>
+      <div class="price"><strong>${fmt(p[2])}</strong><s>${fmt(p[3])}</s></div>
+      <button class="add" data-n="${p[0]} ${p[1]}">Add to bag</button></div></article>`}).join("");
+  document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.b===filter));
+}
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),2200)}
+document.getElementById("tabs").addEventListener("click",e=>{if(e.target.dataset.b){filter=e.target.dataset.b;render()}});
+grid.addEventListener("click",e=>{const b=e.target.closest(".add");if(b){cart++;document.getElementById("count").textContent=cart;toast(b.dataset.n+" added to your bag")}});
+document.querySelectorAll("[data-go]").forEach(el=>el.addEventListener("click",()=>{filter=el.dataset.go;render();document.getElementById("shop").scrollIntoView({behavior:"smooth"})}));
+document.getElementById("cartBtn").addEventListener("click",()=>toast(cart?cart+" item(s) in your bag":"Your bag is empty. Add a pair to start."));
+render();
+</script>
+</body>
+</html>
